@@ -1,0 +1,55 @@
+import math
+
+class BilliardGame:
+    """ 🎱 당구 시뮬레이션: 내 공(myball)로 목적구(target)를 맞추는 코드 """
+
+    def __init__(self, myball_pos, target_pos, ball_radius=0.5):
+        """
+        📌 초기화
+        :param myball_pos: 내 공(큐볼) 위치 (x, y)
+        :param target_pos: 목표 공(타겟) 위치 (x, y)
+        :param ball_radius: 공의 반지름 (기본값 0.5)
+        """
+        self.myball_pos = myball_pos
+        self.target_pos = target_pos
+        self.ball_radius = ball_radius  # 공의 크기 고려
+
+    def calculate_distance(self):
+        """
+        📏 내 공(myball)과 목표 공(target) 사이 거리 계산 (피타고라스 정리 활용)
+        :return: 유클리드 거리
+        """
+        dx = self.target_pos[0] - self.myball_pos[0]
+        dy = self.target_pos[1] - self.myball_pos[1]
+        return math.sqrt(dx**2 + dy**2)
+
+    def calculate_shot(self):
+        """
+        🚀 목적구를 맞추기 위해 필요한 각도와 파워 계산
+        :return: (샷 각도, 파워)
+        """
+        dx = self.target_pos[0] - self.myball_pos[0]
+        dy = self.target_pos[1] - self.myball_pos[1]
+
+        # 🔄 이동 방향(θ) 계산 (라디안 → 도)
+        shot_angle = math.degrees(math.atan2(dy, dx))
+
+        # 📏 거리 기반 파워 설정 (거리 비례, 최소 10, 최대 100)
+        distance = self.calculate_distance()
+        power = min(max(distance * 5, 10), 100)
+
+        return shot_angle % 360, power
+
+    def play(self):
+        """
+        🎯 공을 치고 결과 출력
+        """
+        shot_angle, power = self.calculate_shot()
+        print(f"\n🚀 공을 {power:.2f}의 힘으로 {shot_angle:.2f}° 방향으로 칩니다!")
+
+# 🎱 예제 실행
+myball_pos = (1, 1)  # 내 공 위치
+target_pos = (8, 3)  # 목표 공 위치
+
+billiard_game = BilliardGame(myball_pos, target_pos)
+billiard_game.play()
