@@ -9,9 +9,7 @@ def bfs(i, j, N):   # 출발점과 미로판 길이를 받고,
     visited = [[0]*N for _ in range(N)]     # 방문 여부 저장
     q = deque()                             # 큐 생성
     q.append((i, j))                        # 시작점 인큐
-    print(f"처음 큐 : {q}")
     visited[i][j] = 1                       # 시작점 방문 표시
-    print(f"처음 방문 리스트 : {visited}")
     # 이동방향 (우, 하, 좌, 상)
     directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
 
@@ -28,9 +26,7 @@ def bfs(i, j, N):   # 출발점과 미로판 길이를 받고,
             # 미로 범위 내, 벽이 아니고, 방문하지 않은 곳이라면,
             if 0 <= wi < N and 0 <= wj < N and maze[wi][wj] != 1 and visited[wi][wj] == 0:
                 q.append((wi, wj))  # 큐에 다음 방문지점 추가하고
-                print(f"방문 큐 : {q}")
                 visited[wi][wj] = 1 # 방문했다고 표시
-                print(f"방문 리스트 : {visited}")
 
     return 0
 
