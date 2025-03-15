@@ -1,4 +1,4 @@
-# 이진수
+ # 이진수
 
 import sys
 sys.stdin = open("13016.input.txt", "r")
@@ -11,7 +11,7 @@ def hex_to_binary(hex_str):
         'C': "1100", 'D': "1101", 'E': "1110", 'F': "1111"
     }
 
-    binary_str = "".join(hex_to_bin_map[digit] for digit in hex_str.upper())
+    binary_str = "".join(hex_to_bin_map[digit] for digit in hex_str)
     return binary_str
 
 T = int(input())

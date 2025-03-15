@@ -11,26 +11,23 @@ def count_subtree_size(tree, node):
         current = stack.pop()
         cnt += 1
         if current in tree:
-            stack.extend(tree[current])  # 현재 노드의 자식들을 쭉쭉 스택에 추가
+            stack.extend(tree[current])
 
     return cnt
 
 T = int(input())
-
-for t in range(1, T + 1):
+for tc in range(1, T + 1):
     E, N = map(int, input().split())  # 간선 개수, 루트로 삼을 노드
-    edges = list(map(int, input().split()))  # 부모-자식 관계 리스트
+    edges = list(map(int, input().split()))
 
     tree = {}
 
     # 트리 구성
-    for i in range(E):
+    for i in range(E):  # 간선 개수 만큼
         parent, child = edges[2 * i], edges[2 * i + 1]
         if parent not in tree:
             tree[parent] = []
         tree[parent].append(child)
 
     result = count_subtree_size(tree, N)
-
-    # 결과 출력
-    print(f"#{t} {result}")
+    print(f'#{tc} {result}')

@@ -3,33 +3,24 @@
 import sys
 sys.stdin = open("23883.input.txt", "r")
 
-def inorder_traversal(tree, node):
-    if tree[node] == None:
-        return
-    if node in tree and tree[node]:  # 왼쪽 자식이 있으면 방문
-        inorder_traversal(tree, tree[node][0])
-    result.append(node)
-    if node in tree and len(tree[node]) > 1:  # 오른쪽 자식이 있으면 방문
-        inorder_traversal(tree, tree[node][1])
+def in_order(idx, N):
+    global cnt
+    if idx <= N:  # 배열 범위 내에 있을 때까지 진행
+        in_order(idx * 2, N)  # 왼쪽 자식 방문
+        tree[idx] = cnt
+        cnt += 1
+        in_order(idx * 2 + 1, N)  # 오른쪽 자식 방문
 
 T = int(input())
 for tc in range(1, T + 1):
-    N = int(input())
+    N = int(input())  # 1 ~ N 까지의 수를 저장
 
-    tree = {}
+    tree = [0] * (N + 1)
+    cnt = 1
 
-    for parent in range(1, N + 1):
-        tree[parent] = []
-        if parent * 2 < N + 1:
-            tree[parent].append(parent * 2)
-        if parent * 2 + 1 < N + 1:
-            tree[parent].append(parent * 2 + 1)
+    in_order(1, N)  # 중위 순회로 트리에 값 채우기
 
-    result = []
-    inorder_traversal(tree, 1)
-    root = 1
-    root_value = result.index(root) + 1  # 루트의 값 출력
-    half = N//2
-    half_value = result.index(half) + 1  # N의 절반의 값 출력
+    root_value = tree[1]
+    half_value = tree[N // 2]
 
     print(f'#{tc} {root_value} {half_value}')
