@@ -1,36 +1,23 @@
-# def KFC(num):
-#     if num == 5:
-#         return
-#     print(num)
-#     KFC(num + 1)
-#     print(num)
-#
-# KFC(0)
-# print("끝")
+from collections import deque
 
-path = []
-# cnt = 재귀호출마다 누적되어 전달되어야 하는 값.
-def recur(cnt):  # 보통 매개변수는 누적되는 것!!!!!!!!
-    # 카드를 2 개 뽑으면 종료
-    if cnt == 2:
-        # 종료시에 해야할 로직 여기 작성
-        print(*path)
-        return
 
-    # 1개의 카드를 뽑는다.
-    path.append(0)
-    # 다음 재귀호출 (뽑은 카드 1개가 추가)
-    recur(cnt + 1)
-    # 지나간 경로는 다시 안감.
-    path.pop()
+def level_order_traversal(tree, root):
+    queue = deque([root])  # BFS를 위한 큐 (탐색할 노드 저장)
 
-    path.append(1)
-    recur(cnt + 1)
-    path.pop()
+    while queue:
+        node = queue.popleft()  # 가장 앞에 있는 노드를 꺼냄
+        print(node, end=" ")  # 방문한 노드 출력
 
-    path.append(2)
-    recur(cnt + 1)
-    path.pop()
+        if node in tree:  # 현재 노드에 연결된 자식 노드가 있다면
+            queue.extend(tree[node])  # 큐에 자식 노드들을 추가 (왼쪽 → 오른쪽 순)
 
-# 제일 처음 호출할 때 시점이므로, 초기값을 전달하면서 시작
-recur(0)
+
+# ✅ 예제 트리
+tree = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F', 'G']
+}
+
+# 🏆 BFS 실행 (레벨 순서 순회)
+level_order_traversal(tree, 'A')
