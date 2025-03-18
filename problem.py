@@ -1,23 +1,20 @@
-from collections import deque
+def subset_sum(S, target, index=0, current=[]):
+    # 현재 부분집합의 합이 target이면 출력
+    if sum(current) == target:
+        print(current)
+        return
 
+    # 종료 조건: 인덱스가 배열 끝을 넘어가면 종료
+    if index >= len(S):
+        return
 
-def level_order_traversal(tree, root):
-    queue = deque([root])  # BFS를 위한 큐 (탐색할 노드 저장)
+    # 현재 원소 포함하는 경우
+    subset_sum(S, target, index + 1, current + [S[index]])
 
-    while queue:
-        node = queue.popleft()  # 가장 앞에 있는 노드를 꺼냄
-        print(node, end=" ")  # 방문한 노드 출력
+    # 현재 원소 포함하지 않는 경우
+    subset_sum(S, target, index + 1, current)
 
-        if node in tree:  # 현재 노드에 연결된 자식 노드가 있다면
-            queue.extend(tree[node])  # 큐에 자식 노드들을 추가 (왼쪽 → 오른쪽 순)
-
-
-# ✅ 예제 트리
-tree = {
-    'A': ['B', 'C'],
-    'B': ['D', 'E'],
-    'C': ['F', 'G']
-}
-
-# 🏆 BFS 실행 (레벨 순서 순회)
-level_order_traversal(tree, 'A')
+# 실행
+S = [3, 1, 2, 5]
+target = 5
+subset_sum(S, target)
