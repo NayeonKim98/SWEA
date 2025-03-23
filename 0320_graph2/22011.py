@@ -4,38 +4,49 @@ import heapq
 import sys
 sys.stdin = open("22011.input.txt", "r")
 
-def dijkstra(n, edges):
-    adj = [[] for _ in range(n + 1)]
-    for s, e, w in edges:
-        adj[s].append((e, w))  # 단방향
+# 다익스트라 알고리즘
+def dijkstra(start, graph, N):
+    INF = float('inf')
+    distance = [INF] * (N + 1)  # 거리 리스트
+    distance[start] = 0  # 시작점의 거리 0
 
-    inf = float('inf')
-    dist = [inf] * (n + 1)
-    dist[0] = 0  # 시작 정점의 거리 = 0
-
-    heap = [(0, 0)]  # (거리, 노드)
+    # 최소 힙을 이용한 우선순위 큐
+    heap = []
+    heapq.heappush(heap, (0, start))  # (거리, 노드번호) 형태로 push
 
     while heap:
-        cur_dist, cur_node = heapq.heappop(heap)
+        dist, now = heapq.heappop(heap)  # 가장 짧은 거리의 노드 꺼냄
 
-        if cur_dist > dist[cur_node]:  # 이미 최소 거리가 계산되있는 경우는 스킵
+        # 이미 처리된 노드라면 무시
+        if distance[now] < dist:  # 지금 뽑은 거리보다 원래 거리가 더 짧으면
             continue
 
-        for next_node, weight in adj[cur_node]:
-            new_dist = cur_dist + weight
-            if new_dist < dist[next_node]:  # 방문 안한 경우만
-                dist[next_node] = new_dist
-                heapq.heappush(heap, (new_dist, next_node))
+        # 인접 노드 확인
+        for next_node, weight in graph[now]:
+            cost = dist + weight  # 현재 노드까지 거리 + 다음 노드까지 거리
+            if cost < distance[next_node]:  # 더 짧은 경로라면 갱신
+                distance[next_node] = cost
+                heapq.heappush(heap, (cost, next_node))
 
-    return dist[n]
+    return distance[N]  # 0번에서 N번까지의 최소 거리 반환
 
+
+# 테스트 케이스 수 입력
 T = int(input())
-for tc in range(1, T + 1):
-    N, E = map(int, input().split())
-    edges = []
-    for _ in range(E):
-        s, e, w = map(int, input().split())
-        edges.append((s, e, w))
 
-    shortest_path = dijkstra(N, edges)
-    print(f'#{tc} {shortest_path}')
+for tc in range(1, T + 1):
+    N, E = map(int, input().split())  # 마지막 노드 번호 N, 도로 수 E
+
+    # 인접 리스트 방식
+    graph = [[] for _ in range(N + 1)]
+
+    # 간선 정보 입력 받기
+    for _ in range(E):
+        s, e, w = map(int, input().split())  # 시작점(start), 도착점(end), 거리(weight)
+        graph[s].append((e, w))  # 방향성이 있으므로 s → e 만 추가
+
+    # 다익스트라 알고리즘 실행
+    min_distance = dijkstra(0, graph, N)
+
+    # 결과 출력
+    print(f"#{tc} {min_distance}")

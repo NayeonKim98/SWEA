@@ -4,38 +4,40 @@ import heapq
 import sys
 sys.stdin = open("23901.input.txt", "r")
 
-directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]   # 상, 하, 좌, 우 방향 벡터
+# 다익스트라 알고리즘
+def dijkstra(matrix, N):
+    MAX = float('inf')  # 초기 거리
+    dist = [[MAX] * N for _ in range(N)]  # 거리 정보 저장 배열
+    dist[0][0] = 0  # 시작점의 연료 소모량 0
+    pq = [(0, 0, 0)]  # (연료, x, y)
+    directions = [(0, 1), (1, 0), (-1, 0), (0, -1)]  # 4방향 이동
 
-def min_fuel_consumption(grid):
-    inf = float('inf')
+    while pq:
+        fuel, x, y = heapq.heappop(pq)
 
-    fuel_cost = [[inf] * N for _ in range(N)]
-    fuel_cost[0][0] = 0
-
-    heap = [(0, 0, 0)]  # (연료 소비량, x좌표, y좌표)
-
-    while heap:
-        cost, x, y = heapq.heappop(heap)
-
-        if cost > fuel_cost[x][y]:  # 꺼낸 비용이 기존보다 크면 무시
+        # 이미 더 적은 연료로 방문했다면 스킵
+        if fuel > dist[x][y]:
             continue
 
         for dx, dy in directions:
             nx, ny = x + dx, y + dy
 
+            # 매트릭스 범위 안에 들어오는 경우만 처리
             if 0 <= nx < N and 0 <= ny < N:
-                additional_cost = max(0, grid[nx][ny] - grid[x][y])
-                new_cost = cost + 1 + additional_cost  # 높이 차이도 비용에 고려
+                height_diff = matrix[nx][ny] - matrix[x][y]
+                extra_fuel = height_diff if height_diff > 0 else 0
+                new_fuel = fuel + 1 + extra_fuel  # 기본 연료 1 + 높이차 연료
 
-                if new_cost < fuel_cost[nx][ny]:  # 더 적은 연료 가능이면 업데이트
-                    fuel_cost[nx][ny] = new_cost
-                    heapq.heappush(heap, (new_cost, nx, ny))
+                # 최소 연료 갱신 시 큐에 추가
+                if new_fuel < dist[nx][ny]:
+                    dist[nx][ny] = new_fuel
+                    heapq.heappush(pq, (new_fuel, nx, ny))
 
-    return fuel_cost[N - 1][N - 1]
+    return dist[N - 1][N - 1]  # 도착지점까지 최소 연료 반환
 
 T = int(input())
 for tc in range(1, T + 1):
     N = int(input())
-    grid = [list(map(int, input().split())) for _ in range(N)]
-
-    print(f'#{tc} {min_fuel_consumption(grid)}')
+    matrix = [list(map(int, input().split())) for _ in range(N)]
+    result = dijkstra(matrix, N)
+    print(f"#{tc} {result}")
